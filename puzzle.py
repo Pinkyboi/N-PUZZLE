@@ -39,4 +39,3 @@ class PuzzleNode():
         for block in self.puzzle:
             print(block, end=" {}".format('\n' if (self.puzzle.index(block) + 1) % self.dim == 0 else ''))
         print()
-    

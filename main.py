@@ -1,14 +1,16 @@
 from puzzle import PuzzleNode
 
 from puzzleSolver import PuzzleSolver
-
+from parser import parser
 
 if __name__ == "__main__":
-    start_puzzle = [8, 1, 2, 0, 4, 3, 7, 6, 5]
+    parserIstance = parser("puzzle.txt")
+    parserIstance.loadData()
+    parserIstance.cleanPuzzle()
+    start_puzzle = parserIstance.flattenedPuzzle
     end_puzzle = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-    size = 3
-    f_node = PuzzleNode(start_puzzle, size, None)
-    e_node = PuzzleNode(end_puzzle, size, None)
+    f_node = PuzzleNode(start_puzzle, parserIstance.shape, None)
+    e_node = PuzzleNode(end_puzzle, parserIstance.shape, None)
     f_node.printNode()
     e_node.printNode()
     
