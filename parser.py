@@ -5,6 +5,8 @@ class parser():
 
     def __init__(self, path):
         self._path = path
+        self._flattenedPuzzle = []
+        self._shape = -1
 
     def loadData(self):
         try:
@@ -40,7 +42,6 @@ class parser():
             exit()
 
     def flattenPuzzle(self, puzzleLines):
-        self._flattenedPuzzle = []
         for line in puzzleLines:
             self._flattenedPuzzle += [int(x) for x in line.split()]
         for i in range(pow(self._shape, 2)):
@@ -55,6 +56,14 @@ class parser():
             exit()
         self.getShape(newLines)
         self.flattenPuzzle(newLines[1:])
+
+    @property
+    def shape(self):
+        return self._shape
+
+    @property
+    def flattenedPuzzle(self):
+        return self._flattenedPuzzle
         
 if __name__ == "__main__":
     p = parser("puzzle.txt")
