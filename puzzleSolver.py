@@ -1,4 +1,5 @@
 
+from math import sqrt
 class PuzzleSolver():
 
     def __init__(self, startState, goalState):
@@ -6,13 +7,6 @@ class PuzzleSolver():
         self._goalState = goalState
         if not self.isSolvable():
             raise Exception("The puzzle is not solvable")
-    
-    @staticmethod
-    def manhatanDistance(startState, goalState , block):
-        iIndex = startState.puzzle.index(block)    
-        gIndex = goalState .puzzle.index(block)
-        pLen = startState.len
-        return abs(iIndex // pLen - gIndex // pLen) + abs(iIndex % pLen - gIndex % pLen)
 
     def isSolvable(self):
         total_permutation = 0
@@ -26,6 +20,21 @@ class PuzzleSolver():
                     total_permutation += 1
         return initial_permutation % 2 == total_permutation % 2
                     
+    @staticmethod
+    def euclideanDistance(startState, goalState, block):
+        iIndex = startState.puzzle.index(block)    
+        gIndex = goalState .puzzle.index(block)
+        pLen = startState.len
+        xDistance = abs(iIndex // pLen - gIndex // pLen)
+        yDistance = abs(iIndex % pLen - gIndex % pLen)
+        return sqrt(xDistance ** 2 + yDistance ** 2)
+
+    @staticmethod
+    def manhatanDistance(startState, goalState , block):
+        iIndex = startState.puzzle.index(block)    
+        gIndex = goalState .puzzle.index(block)
+        pLen = startState.len
+        return abs(iIndex // pLen - gIndex // pLen) + abs(iIndex % pLen - gIndex % pLen)
 
     @property
     def startState(self):
