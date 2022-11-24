@@ -9,16 +9,17 @@ class PuzzleSolver():
             raise Exception("The puzzle is not solvable")
 
     def isSolvable(self):
-        total_permutation = 0
-        initial_permutation = PuzzleSolver.manhatanDistance(self.startState, self.goalState, 0)
-        while self.startState.puzzle != self.goalState.puzzle:
-            for sBlock, gBlock  in zip(self.startState.puzzle, self.goalState.puzzle):
+        totalPermutation = 0
+        initialPermutation = PuzzleSolver.manhatanDistance(self.startState, self.goalState, 0)
+        puzzle = self.startState.puzzle
+        while puzzle != self.goalState.puzzle:
+            for sBlock, gBlock  in zip(puzzle, self.goalState.puzzle):
                 if sBlock != gBlock:
-                    currentIndex = self.startState.puzzle.index(sBlock)
-                    swapIndex = self.startState.puzzle.index(gBlock)
-                    self.startState.puzzle[currentIndex], self.startState.puzzle[swapIndex] = gBlock, sBlock
-                    total_permutation += 1
-        return initial_permutation % 2 == total_permutation % 2
+                    currentIndex = puzzle.index(sBlock)
+                    swapIndex = puzzle.index(gBlock)
+                    puzzle[currentIndex], puzzle[swapIndex] = gBlock, sBlock
+                    totalPermutation += 1
+        return initialPermutation % 2 == totalPermutation % 2
                     
     @staticmethod
     def euclideanDistance(startState, goalState, block):
