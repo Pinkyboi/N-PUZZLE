@@ -12,12 +12,10 @@ class PuzzleSolver():
         if not self.isSolvable():
             raise Exception("The puzzle is not solvable")
 
-    def solve(self):
-        pass
 
-    def createChildrenStates(self, currentState):
-        dim = currentState.dim
-        index = currentState.puzzle.index(0)
+    def createChildrenStates(self, parentPuzzle):
+        dim = parentPuzzle.dim
+        index = parentPuzzle.puzzle.index(0)
         moves = [('x', index + 1), ('x', index - 1), ('y', index + dim), ('y', index - dim)]
         newPuzzles = []
         for axis, move in moves:
@@ -25,14 +23,11 @@ class PuzzleSolver():
                 continue
             if move < 0 or move >= dim * dim:
                 continue
-            newPuzzle = currentState.puzzle.copy()
+            newPuzzle = parentPuzzle.puzzle.copy()
             newPuzzle[index], newPuzzle[move] = newPuzzle[move], newPuzzle[index]
-            newPuzzles.append(PuzzleNode(newPuzzle, dim, currentState))
+            newPuzzles.append(PuzzleNode(newPuzzle, dim, parentPuzzle))
         return newPuzzles
-            
-    def solve(self):
-        pass
-      
+
     def isSolvable(self):
         totalPermutation = 0
         initialPermutation = PuzzleSolver.manhatanDistance(self.startState, self.goalState, 0)

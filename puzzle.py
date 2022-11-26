@@ -3,7 +3,7 @@
 
 class PuzzleNode():
     
-    def __init__(self, puzzle, dim, parent, cost = 0):
+    def __init__(self, puzzle, dim, parent):
         self._puzzle = puzzle
         self._dim = dim
         self._len = dim ** 2
