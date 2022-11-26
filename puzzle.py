@@ -9,7 +9,7 @@ class PuzzleNode():
         self._len = dim ** 2
         self._parent = parent
         self._depth = parent.depth + 1 if parent != None else 0
-        self._cost = cost
+        self._cost = 0
 
     @property
     def cost(self):
@@ -31,9 +31,16 @@ class PuzzleNode():
     def parent(self):
         return self.parent
 
+    @property
+    def depth(self):
+        return self._depth
+
+    @cost.setter
+    def cost(self, value):
+        self._cost = value
+
     def _lt_(self, other):
         return self.cost < other.cost
-    
 
     def printNode(self):
         for block in self.puzzle:
