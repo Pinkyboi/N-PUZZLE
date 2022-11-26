@@ -1,7 +1,7 @@
 
 import re
 
-class parser():
+class Parser():
 
     def __init__(self, path):
         self._path = path
@@ -66,7 +66,7 @@ class parser():
         return self._flattenedPuzzle
         
 if __name__ == "__main__":
-    p = parser("puzzle.txt")
+    p = Parser("puzzle.txt")
     p.loadData()
     # p.printRawPuzzle()
     p.cleanPuzzle()
