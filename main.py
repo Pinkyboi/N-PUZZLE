@@ -1,17 +1,42 @@
 from puzzle import PuzzleNode
 
 from puzzleSolver import PuzzleSolver
-from parser import parser
+from parser import Parser
+import argparse
+import os
+
+def heuristicCheck(heuristic):
+    if heuristic == 0:
+        heuristic = PuzzleSolver.manhatanDistance
+    elif heuristic == 1:
+        heuristic = PuzzleSolver.euclideanDistance
+    elif heuristic == 2:
+        heuristic = PuzzleSolver.misplacedTile
+    else:
+        raise argparse.ArgumentTypeError(f"heuristic:{heuristic} is not a valid heuristic") 
+def file_path(path):
+    if os.path.isfile(path):
+        return path
+    else:
+        raise argparse.ArgumentTypeError(f"readable_dir:{path} is not a valid path")
+
+def getExectionParameters():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--heuristic", type=heuristicCheck, default=0, help="The heuristic to use for the puzzle solver:-1: Manhattan Distance\n-2: Euclidean Distance\n-3: Misplaced Tile", required=False)
+    parser.add_argument("-v", action="store_true", default=False , help="Visualize the solution", required=False)
+    parser.add_argument("-p", "--path", type=file_path, help="Path to a puzzle file", required=True)
+    return parser.parse_args()
 
 if __name__ == "__main__":
-    parserIstance = parser("puzzle.txt")
+    execParameters  = getExectionParameters()
+    parserIstance = Parser(execParameters.path)
     parserIstance.loadData()
     parserIstance.cleanPuzzle()
     start_puzzle = parserIstance.flattenedPuzzle
-    end_puzzle = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-    f_node = PuzzleNode(start_puzzle, parserIstance.shape, None)
-    e_node = PuzzleNode(end_puzzle, parserIstance.shape, None)
-    f_node.printNode()
-    e_node.printNode()
-    
-    PuzzleSolver(f_node, e_node)
+    end_puzzle = [2, 1, 3,4,0,7,6,5,8]
+    firstNode = PuzzleNode(start_puzzle, parserIstance.shape, None)
+    endNode = PuzzleNode(end_puzzle, parserIstance.shape, None)
+    solver = PuzzleSolver(firstNode, endNode, PuzzleSolver.manhatanDistance)
+    newPuzzles = solver.createChildrenStates(endNode)
+    for puzzle in newPuzzles:
+        puzzle.printNode()
