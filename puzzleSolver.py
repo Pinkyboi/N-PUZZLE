@@ -8,6 +8,7 @@ class PuzzleSolver():
     def __init__(self, startState, goalState, heuristic):
         self._startState = startState
         self._goalState = goalState
+        self._goalStateHash = hash(goalState)
         self._heuristic = heuristic
         self._priorityQueue = PriorityQueue()
         self._priorityQueue.put(self._startState)
@@ -30,7 +31,7 @@ class PuzzleSolver():
             newPuzzle[index], newPuzzle[move] = newPuzzle[move], newPuzzle[index]
             newPuzzleNode = PuzzleNode(newPuzzle, dim, parentPuzzle)
             g = newPuzzleNode.depth
-            h = self.calculateHeuristic(newPuzzleNode, self.goalState)
+            h = self.calculateHeuristic(newPuzzleNode, self._goalState)
             newPuzzleNode.cost = g + h
             newPuzzles.append(newPuzzleNode)
         return newPuzzles
@@ -38,27 +39,27 @@ class PuzzleSolver():
     def solve(self):
         while not self._priorityQueue.empty():
             current_item = self._priorityQueue.get()
-            if current_item.puzzle == self.goalState.puzzle: # todo: probably slow
-                return current_item
             currentItemHash = hash(current_item)
-            if currentItemHash in self.closedList.keys()\
+            if currentItemHash == self._goalStateHash:
+                return current_item
+            if currentItemHash in self._closedList.keys()\
                 and current_item.cost >= self._closedList[currentItemHash].cost:
                 continue
-            self.closedList[currentItemHash] = current_item
+            self._closedList[currentItemHash] = current_item
             childrenNodes = self.createChildrenNodes(current_item)
             for index in range(len(childrenNodes)):
                 childHash = hash(childrenNodes[index])
-                if childHash in self.closedList.keys()\
-                    and childrenNodes[index].cost >= self.closedList[childHash].cost:
+                if childHash in self._closedList.keys()\
+                    and childrenNodes[index].cost >= self._closedList[childHash].cost:
                         continue
                 self._priorityQueue.put(childrenNodes[index])
 
     def isSolvable(self):
         totalPermutation = 0
-        initialPermutation = PuzzleSolver.manhatanDistance(self.startState, self.goalState, 0)
-        testPuzzle = self.startState.puzzle.copy()
-        while testPuzzle != self.goalState.puzzle:
-            for sBlock, gBlock  in zip(testPuzzle, self.goalState.puzzle):
+        initialPermutation = PuzzleSolver.manhatanDistance(self._startState, self._goalState, 0)
+        testPuzzle = self._startState.puzzle.copy()
+        while testPuzzle != self._goalState.puzzle:
+            for sBlock, gBlock  in zip(testPuzzle, self._goalState.puzzle):
                 if sBlock != gBlock:
                     currentIndex = testPuzzle.index(sBlock)
                     swapIndex = testPuzzle.index(gBlock)
@@ -89,26 +90,5 @@ class PuzzleSolver():
         return 1 if startState.puzzle.index(block) != goalState.puzzle.index(block) else 0
 
     def calculateHeuristic(self, currentState, goalState):
-        return sum(self.heuristic(currentState, goalState, block) for block in currentState.puzzle)
-
-    @property
-    def startState(self):
-        return self._startState
-    
-    @property
-    def goalState(self):
-        return self._goalState
-
-    @property
-    def currentState(self):
-        return self._currentState
-
-    @property
-    def heuristic(self):
-        return self._heuristic
-
-    @property
-    def closedList(self):
-        return self._closedList
-
+        return sum(self._heuristic(currentState, goalState, block) for block in currentState.puzzle)
 
