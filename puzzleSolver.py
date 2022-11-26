@@ -62,6 +62,13 @@ class PuzzleSolver():
         pLen = startState.len
         return abs(iIndex // pLen - gIndex // pLen) + abs(iIndex % pLen - gIndex % pLen)
 
+    @staticmethod
+    def misplacedTile(startState, goalState, block):
+        return 1 if startState.puzzle.index(block) != goalState.puzzle.index(block) else 0
+
+    def calculateHeuristic(self, currentState, goalState):
+        return sum(self.heuristic(currentState, goalState, block) for block in currentState.puzzle)
+
     @property
     def startState(self):
         return self._startState
