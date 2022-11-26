@@ -10,10 +10,11 @@ class PuzzleSolver():
         self._heuristic = heuristic
         self._priorityQueue = PriorityQueue()
         if not self.isSolvable():
-            raise Exception("The puzzle is not solvable")
+            print("The puzzle is not solvable.")
+            exit()
 
 
-    def createChildrenStates(self, parentPuzzle):
+    def createChildrenNodes(self, parentPuzzle):
         dim = parentPuzzle.dim
         index = parentPuzzle.puzzle.index(0)
         moves = [('x', index + 1), ('x', index - 1), ('y', index + dim), ('y', index - dim)]
@@ -31,7 +32,7 @@ class PuzzleSolver():
     def isSolvable(self):
         totalPermutation = 0
         initialPermutation = PuzzleSolver.manhatanDistance(self.startState, self.goalState, 0)
-        testPuzzle = self.startState.puzzle
+        testPuzzle = self.startState.puzzle.copy()
         while testPuzzle != self.goalState.puzzle:
             for sBlock, gBlock  in zip(testPuzzle, self.goalState.puzzle):
                 if sBlock != gBlock:
@@ -45,7 +46,7 @@ class PuzzleSolver():
     def euclideanDistance(startState, goalState, block):
         iIndex = startState.puzzle.index(block)    
         gIndex = goalState .puzzle.index(block)
-        pLen = startState.len
+        pLen = len(startState.puzzle)
         xDistance = abs(iIndex // pLen - gIndex // pLen)
         yDistance = abs(iIndex % pLen - gIndex % pLen)
         return sqrt(xDistance ** 2 + yDistance ** 2)
@@ -54,7 +55,7 @@ class PuzzleSolver():
     def manhatanDistance(startState, goalState , block):
         iIndex = startState.puzzle.index(block)    
         gIndex = goalState .puzzle.index(block)
-        pLen = startState.len
+        pLen = len(startState.puzzle)
         return abs(iIndex // pLen - gIndex // pLen) + abs(iIndex % pLen - gIndex % pLen)
 
     @staticmethod

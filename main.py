@@ -13,12 +13,14 @@ def heuristicCheck(heuristic):
     elif heuristic == 2:
         heuristic = PuzzleSolver.misplacedTile
     else:
-        raise argparse.ArgumentTypeError(f"heuristic:{heuristic} is not a valid heuristic") 
+        print(f"heuristic:{heuristic} is not a valid heuristic")
+        exit()
 def file_path(path):
     if os.path.isfile(path):
         return path
     else:
-        raise argparse.ArgumentTypeError(f"readable_dir:{path} is not a valid path")
+        print(f"readable_dir:{path} is not a valid path")
+        exit()
 
 def getExectionParameters():
     parser = argparse.ArgumentParser()
@@ -33,10 +35,11 @@ if __name__ == "__main__":
     parserIstance.loadData()
     parserIstance.cleanPuzzle()
     start_puzzle = parserIstance.flattenedPuzzle
-    end_puzzle = [2, 1, 3,4,0,7,6,5,8]
+    end_puzzle = [2, 1, 3,4,7,6,5,8, 9, 10, 11, 12, 13, 14, 15, 0]
     firstNode = PuzzleNode(start_puzzle, parserIstance.shape, None)
     endNode = PuzzleNode(end_puzzle, parserIstance.shape, None)
     solver = PuzzleSolver(firstNode, endNode, PuzzleSolver.manhatanDistance)
-    newPuzzles = solver.createChildrenStates(endNode)
+    newPuzzles = solver.createChildrenNodes(firstNode)
+    firstNode.printNode()
     for puzzle in newPuzzles:
         puzzle.printNode()

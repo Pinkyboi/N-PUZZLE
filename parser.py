@@ -41,9 +41,21 @@ class Parser():
             print("Error: Shape cannot be lower than 2.")
             exit()
 
+    @property
+    def shape(self):
+        return self._shape
+
+    @property
+    def flattenedPuzzle(self):
+        return self._flattenedPuzzle
+
     def flattenPuzzle(self, puzzleLines):
         for line in puzzleLines:
-            self._flattenedPuzzle += [int(x) for x in line.split()]
+            row = [int(x) for x in line.split()]
+            if len(row) != self._shape:
+                print("Error: Wrong format.")
+                exit()
+            self._flattenedPuzzle += row
         for i in range(pow(self._shape, 2)):
             if i not in self._flattenedPuzzle:
                 print("Error: Wrong numbers in puzzle.")
@@ -57,13 +69,6 @@ class Parser():
         self.getShape(newLines)
         self.flattenPuzzle(newLines[1:])
 
-    @property
-    def shape(self):
-        return self._shape
-
-    @property
-    def flattenedPuzzle(self):
-        return self._flattenedPuzzle
         
 if __name__ == "__main__":
     p = Parser("puzzle.txt")
