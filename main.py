@@ -35,11 +35,16 @@ if __name__ == "__main__":
     parserIstance.loadData()
     parserIstance.cleanPuzzle()
     start_puzzle = parserIstance.flattenedPuzzle
-    end_puzzle = [2, 1, 3,4,7,6,5,8, 9, 10, 11, 12, 13, 14, 15, 0]
+    end_puzzle = [1, 2, 3, 4, 12, 13, 14, 5, 11, 0, 15, 6, 10, 9, 8, 7]
     firstNode = PuzzleNode(start_puzzle, parserIstance.shape, None)
     endNode = PuzzleNode(end_puzzle, parserIstance.shape, None)
     solver = PuzzleSolver(firstNode, endNode, PuzzleSolver.manhatanDistance)
-    newPuzzles = solver.createChildrenNodes(firstNode)
-    firstNode.printNode()
-    for puzzle in newPuzzles:
-        puzzle.printNode()
+    goal = solver.solve()
+    goal.printNode()
+    while goal.parent:
+        goal.parent.printNode()
+        goal = goal.parent
+    # newPuzzles = solver.createChildrenNodes(firstNode)
+    # firstNode.printNode()
+    # for puzzle in newPuzzles:
+    #     puzzle.printNode()

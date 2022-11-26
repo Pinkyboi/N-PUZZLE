@@ -25,7 +25,7 @@ class PuzzleNode():
 
     @property
     def parent(self):
-        return self.parent
+        return self._parent
 
     @property
     def depth(self):
@@ -35,10 +35,14 @@ class PuzzleNode():
     def cost(self, value):
         self._cost = value
 
-    def _lt_(self, other):
+    def __lt__(self, other):
         return self.cost < other.cost
+
+    def __hash__(self):
+        return hash(''.join(str(x) for x in self.puzzle))
 
     def printNode(self):
         for block in self.puzzle:
             print(f"|{block:>3}", end="{}".format('|\n' if (self.puzzle.index(block) + 1) % self.dim == 0 else ''))
         print()
+

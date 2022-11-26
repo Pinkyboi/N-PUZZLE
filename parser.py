@@ -53,7 +53,7 @@ class Parser():
         for line in puzzleLines:
             row = [int(x) for x in line.split()]
             if len(row) != self._shape:
-                print("Error: Wrong format.")
+                print("Error: Wrong format.1")
                 exit()
             self._flattenedPuzzle += row
         for i in range(pow(self._shape, 2)):
