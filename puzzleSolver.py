@@ -67,13 +67,11 @@ class PuzzleSolver():
                     totalPermutation += 1
         return initialPermutation % 2 == totalPermutation % 2
 
-            
-        
     @staticmethod
     def euclideanDistance(startState, goalState, block):
         iIndex = startState.puzzle.index(block)    
         gIndex = goalState .puzzle.index(block)
-        pLen = len(startState.puzzle)
+        pLen = startState.dim
         xDistance = abs(iIndex // pLen - gIndex // pLen)
         yDistance = abs(iIndex % pLen - gIndex % pLen)
         return sqrt(xDistance ** 2 + yDistance ** 2)
@@ -82,7 +80,7 @@ class PuzzleSolver():
     def manhatanDistance(startState, goalState , block):
         iIndex = startState.puzzle.index(block)    
         gIndex = goalState .puzzle.index(block)
-        pLen = len(startState.puzzle)
+        pLen = startState.dim
         return abs(iIndex // pLen - gIndex // pLen) + abs(iIndex % pLen - gIndex % pLen)
 
     @staticmethod
