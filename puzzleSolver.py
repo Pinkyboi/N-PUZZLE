@@ -38,16 +38,19 @@ class PuzzleSolver():
     def solve(self):
         while not self._priorityQueue.empty():
             current_item = self._priorityQueue.get()
-
             if current_item.puzzle == self.goalState.puzzle: # todo: probably slow
                 return current_item
-            self.closedList[hash(current_item)] = current_item
+            currentItemHash = hash(current_item)
+            if currentItemHash in self.closedList.keys()\
+                and current_item.cost >= self._closedList[currentItemHash].cost:
+                continue
+            self.closedList[currentItemHash] = current_item
             childrenNodes = self.createChildrenNodes(current_item)
             for index in range(len(childrenNodes)):
                 childHash = hash(childrenNodes[index])
                 if childHash in self.closedList.keys()\
-                    and childrenNodes[index].cost > self.closedList[childHash].cost:
-                    continue
+                    and childrenNodes[index].cost >= self.closedList[childHash].cost:
+                        continue
                 self._priorityQueue.put(childrenNodes[index])
 
     def isSolvable(self):
