@@ -36,8 +36,8 @@ class PuzzleSolver():
         return newPuzzles
 
     def solve(self):
-        while not self._priorityQueue.empty():
-            current_item = self._priorityQueue.get()
+        while not self.priorityQueue.empty():
+            current_item = self.priorityQueue.get()
             if current_item.puzzle == self.goalState.puzzle: # todo: probably slow
                 return current_item
             currentItemHash = hash(current_item)
@@ -51,7 +51,7 @@ class PuzzleSolver():
                 if childHash in self.closedList.keys()\
                     and childrenNodes[index].cost >= self.closedList[childHash].cost:
                         continue
-                self._priorityQueue.put(childrenNodes[index])
+                self.priorityQueue.put(childrenNodes[index])
 
     def isSolvable(self):
         totalPermutation = 0
@@ -95,6 +95,10 @@ class PuzzleSolver():
     def startState(self):
         return self._startState
     
+    @property
+    def priorityQueue(self):
+        return self._priorityQueue
+
     @property
     def goalState(self):
         return self._goalState
