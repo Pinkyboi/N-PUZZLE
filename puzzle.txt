@@ -1,18 +1,6 @@
-# this is a comment
-
-#3 2 6 #another comment
-#   1 4 0
-#8 7 5
-
-5
- 2  3 17  4  5
-16 18 24 19  6
- 1 15  0 22  7
-13 14 23 20 21
-12 11 10  9  8
-
-
-#test sslj
-
-
-#sdfjskljdfafs
+# This puzzle is solvable
+4
+13 1 11 4 
+12 3 5 6 
+15 14 2 0 
+10 9 8 7
