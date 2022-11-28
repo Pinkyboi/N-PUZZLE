@@ -1,5 +1,6 @@
 
 import re
+import sys
 
 class Parser():
 
@@ -13,14 +14,11 @@ class Parser():
             with open(self._path, "r") as f:
                 self._lines = f.readlines()
         except FileNotFoundError:
-            print("File not found.")
-            exit()
+            sys.exit("Error: File not found.")
         except OSError:
-            print("OS Error.")
-            exit()
+            sys.exit("Error: OS Error.")
         except Exception as e:
-            print(f"Unexpected error {repr(e)}")
-            exit()
+            sys.exit(f"Error: Unexpected error {repr(e)}")
 
     def printRawPuzzle(self):
         for line in self._lines:
@@ -38,8 +36,7 @@ class Parser():
     def getShape(self, newLines):
         self.shape = int(newLines[0].split()[0])
         if self._shape <= 2:
-            print("Error: Shape cannot be lower than 2.")
-            exit()
+            sys.exit("Error: Shape cannot be lower than or equal to 2.")
 
     @property
     def shape(self):
@@ -57,30 +54,25 @@ class Parser():
     def shape(self, shape):
         self._shape = shape
 
-    @staticmethod
-    def manageError(error):
-        print(f"Error: {error}.")
-        exit()
-
     def flattenPuzzle(self, puzzleLines):
         if len(puzzleLines) != self.shape:
-            self.manageError("Wrong row shape")
+            sys.exit("Error: Wrong row shape.")
         for line in puzzleLines:
             try:
                 row = [int(x) for x in line.split()]
             except ValueError:
-                self.manageError("Non numeric characters in puzzle")
+                sys.exit("Error: Non numeric characters in puzzle.")
             if len(row) != self.shape:
-                self.manageError("Wrong column shape")
+                sys.exit("Error: Wrong column shape.")
             self.flattenedPuzzle += row
         for i in range(pow(self.shape, 2)):
             if i not in self.flattenedPuzzle:
-                self.manageError("Wrong numbers in puzzle")
+                sys.exit("Error: Wrong numbers in puzzle.")
 
     def cleanPuzzle(self):
         newLines = self.removeComments()
         if len(newLines[0].split()) != 1:
-            self.manageError("Wrong format")
+            sys.exit("Error: Wrong format.")
         self.getShape(newLines)
         self.flattenPuzzle(newLines[1:])
 
