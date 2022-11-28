@@ -5,10 +5,11 @@ from puzzle import PuzzleNode
 
 class PuzzleSolver():
 
-    def __init__(self, startState, goalState, heuristic):
+    def __init__(self, startState, goalState, heuristic, algorithm):
         self._startState = startState
         self._goalState = goalState
         self._heuristic = heuristic
+        self._algorithm = algorithm
         self._priorityQueue = PriorityQueue()
         self._priorityQueue.put(self._startState)
         self._closedList = {}
@@ -29,9 +30,7 @@ class PuzzleSolver():
             newPuzzle = parentPuzzle.puzzle.copy()
             newPuzzle[index], newPuzzle[move] = newPuzzle[move], newPuzzle[index]
             newPuzzleNode = PuzzleNode(newPuzzle, dim, parentPuzzle)
-            g = newPuzzleNode.depth
-            h = self.calculateHeuristic(newPuzzleNode, self._goalState)
-            newPuzzleNode.cost = g + h
+            newPuzzleNode.cost = self._algorithm(newPuzzleNode, self._goalState, self._heuristic)
             newPuzzles.append(newPuzzleNode)
         return newPuzzles
 
@@ -66,6 +65,22 @@ class PuzzleSolver():
         return initialPermutation % 2 == totalPermutation % 2
 
     @staticmethod
+    def aStarSearch(currentState, goalState, heuristic):
+        return PuzzleSolver.calculateHeuristic(currentState, goalState, heuristic) + currentState.depth
+
+    @staticmethod
+    def greedySearch(currentState, goalState, heuristic):
+        return PuzzleSolver.calculateHeuristic(currentState, goalState, heuristic)
+
+    @staticmethod
+    def dijkstraSearch(currentState, goalState, heuristic):
+        return currentState.depth
+
+    @staticmethod
+    def calculateHeuristic(currentState, goalState, heuristic):
+        return sum(heuristic(currentState, goalState, block) for block in currentState.puzzle)
+
+    @staticmethod
     def euclideanDistance(startState, goalState, block):
         iIndex = startState.puzzle.index(block)    
         gIndex = goalState .puzzle.index(block)
@@ -84,7 +99,3 @@ class PuzzleSolver():
     @staticmethod
     def misplacedTile(startState, goalState, block):
         return 1 if startState.puzzle.index(block) != goalState.puzzle.index(block) else 0
-
-    def calculateHeuristic(self, currentState, goalState):
-        return sum(self._heuristic(currentState, goalState, block) for block in currentState.puzzle)
-
