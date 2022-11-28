@@ -36,7 +36,7 @@ class Parser():
         return newLines
 
     def getShape(self, newLines):
-        self._shape = int(newLines[0].split()[0])
+        self.shape = int(newLines[0].split()[0])
         if self._shape <= 2:
             print("Error: Shape cannot be lower than 2.")
             exit()
@@ -49,23 +49,38 @@ class Parser():
     def flattenedPuzzle(self):
         return self._flattenedPuzzle
 
+    @flattenedPuzzle.setter
+    def flattenedPuzzle(self, flattendPuzzle):
+        self._flattenedPuzzle = flattendPuzzle
+
+    @shape.setter
+    def shape(self, shape):
+        self._shape = shape
+
+    @staticmethod
+    def manageError(error):
+        print(f"Error: {error}.")
+        exit()
+
     def flattenPuzzle(self, puzzleLines):
+        if len(puzzleLines) != self.shape:
+            self.manageError("Wrong row shape")
         for line in puzzleLines:
-            row = [int(x) for x in line.split()]
-            if len(row) != self._shape:
-                print("Error: Wrong format.1")
-                exit()
-            self._flattenedPuzzle += row
-        for i in range(pow(self._shape, 2)):
-            if i not in self._flattenedPuzzle:
-                print("Error: Wrong numbers in puzzle.")
-                exit()
+            try:
+                row = [int(x) for x in line.split()]
+            except ValueError:
+                self.manageError("Non numeric characters in puzzle")
+            if len(row) != self.shape:
+                self.manageError("Wrong column shape")
+            self.flattenedPuzzle += row
+        for i in range(pow(self.shape, 2)):
+            if i not in self.flattenedPuzzle:
+                self.manageError("Wrong numbers in puzzle")
 
     def cleanPuzzle(self):
         newLines = self.removeComments()
         if len(newLines[0].split()) != 1:
-            print("Error: Wrong format.")
-            exit()
+            self.manageError("Wrong format")
         self.getShape(newLines)
         self.flattenPuzzle(newLines[1:])
 
@@ -75,4 +90,4 @@ if __name__ == "__main__":
     p.loadData()
     # p.printRawPuzzle()
     p.cleanPuzzle()
-    print(p._flattenedPuzzle)
+    print(p.flattenedPuzzle)
