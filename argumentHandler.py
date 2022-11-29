@@ -1,6 +1,6 @@
 from puzzleSolver import PuzzleSolver
 import puzzleGoalGenerator
-import os, argparse
+import os, argparse, sys
 
 def heuristicCheck(heuristic):
     if heuristic == 'manhattan_distance':
@@ -10,8 +10,7 @@ def heuristicCheck(heuristic):
     elif heuristic == 'misplaced_tile':
         return PuzzleSolver.misplacedTile
     else:
-        print(f"Heuristic: {heuristic} is not a valid heuristic.")
-        exit()
+        sys.exit(f"Heuristic: {heuristic} is not a valid heuristic.")
 
 def seachAlgorithmCheck(algorithm):
     if algorithm == 'A*':
@@ -21,8 +20,7 @@ def seachAlgorithmCheck(algorithm):
     elif algorithm == "Greedy":
         return PuzzleSolver.greedySearch
     else:
-        print(f"Algorithm: {algorithm} is not a valid search algorithm.")
-        exit()
+        sys.exit(f"Algorithm: {algorithm} is not a valid search algorithm.")
 
 def goalGeneratorCheck(goal):
     if goal == 'vertical':
@@ -34,15 +32,13 @@ def goalGeneratorCheck(goal):
     if goal == 'y_spiral':
         return puzzleGoalGenerator.yMajorSpiralGoalState
     else:
-        print(f"Goal State: {goal} is not a valid goal state.")
-        exit()
+        sys.exit(f"Goal State: {goal} is not a valid goal state.")
 
 def file_path(path):
     if os.path.isfile(path):
         return path
     else:
-        print(f"Path: {path} is not a valid path")
-        exit()
+        sys.exit(f"Path: {path} is not a valid path")
 
 def getExectionParameters():
     parser = argparse.ArgumentParser()
