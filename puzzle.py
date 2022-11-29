@@ -8,6 +8,7 @@ class PuzzleNode():
         self._puzzle = puzzle
         self._hash = ''.join(str(x) for x in puzzle)
         self._dim = dim
+        self._swap = 0
         self._parent = parent
         self._depth = parent.depth + 1 if parent != None else 0
         self._cost = 0
@@ -47,3 +48,11 @@ class PuzzleNode():
     @property
     def hash(self):
         return self._hash
+
+    @property
+    def swap(self):
+        return self._swap
+
+    @swap.setter
+    def swap(self, swap):
+        self._swap = swap
