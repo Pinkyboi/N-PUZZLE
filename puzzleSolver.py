@@ -30,6 +30,7 @@ class PuzzleSolver():
             newPuzzle = parentPuzzle.puzzle.copy()
             newPuzzle[index], newPuzzle[move] = newPuzzle[move], newPuzzle[index]
             newPuzzleNode = PuzzleNode(newPuzzle, dim, parentPuzzle)
+            newPuzzleNode.swap = (axis, move // abs(move))
             newPuzzleNode.cost = self._algorithm(newPuzzleNode, self._goalState, self._heuristic)
             newPuzzles.append(newPuzzleNode)
         return newPuzzles
