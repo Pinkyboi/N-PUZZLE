@@ -17,17 +17,11 @@ if __name__ == "__main__":
     endNode = PuzzleNode(execParameters.goal(parserIstance.shape), parserIstance.shape, None)
     solver = PuzzleSolver(firstNode, endNode, execParameters.heuristic, execParameters.algorithm)
     goal = solver.solve()
-    print("{}".format(time.time() - start))
-    goal.printNode()
-    i = 1
-    swaps = []
+    # print("{}".format(time.time() - start))
+    puzzleStates = []
     while goal.parent:
-        i += 1
-        swaps.append(goal.swap)
-        goal.parent.printNode()
-        print(goal.parent._swap, "this is the swap and this is goal swa", goal.swap)
+        puzzleStates.append(goal.puzzle)
         goal = goal.parent
-    print(f"Number of moves: {i}")
-    print(len(swaps[::-1]))
-    vs = NpuzzleVisualizer(parserIstance.shape, swaps, puzzleStart=firstNode.puzzle, windowDim=720)
+    puzzleStates.append(firstNode.puzzle)
+    vs = NpuzzleVisualizer(parserIstance.shape, puzzleStates[::-1], puzzleStart=firstNode.puzzle, windowDim=720)
     vs.startVisualization()
