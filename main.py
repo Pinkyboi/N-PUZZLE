@@ -17,11 +17,11 @@ if __name__ == "__main__":
     endNode = PuzzleNode(execParameters.goal(parserIstance.shape), parserIstance.shape, None)
     solver = PuzzleSolver(firstNode, endNode, execParameters.heuristic, execParameters.algorithm)
     goal = solver.solve()
-    # print("{}".format(time.time() - start))
     puzzleStates = []
     while goal.parent:
         puzzleStates.append(goal.puzzle)
         goal = goal.parent
     puzzleStates.append(firstNode.puzzle)
-    vs = NpuzzleVisualizer(parserIstance.shape, puzzleStates[::-1], 720)
-    vs.startVisualization()
+    if execParameters.v:
+        vs = NpuzzleVisualizer(parserIstance.shape, puzzleStates[::-1], 720)
+        vs.startVisualization()
