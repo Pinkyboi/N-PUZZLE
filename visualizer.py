@@ -1,8 +1,8 @@
 import pygame
 import time
+
 class NpuzzleVisualizer():
 
-    _gameBoardPad = 20
     _pieceBorder = 10
 
     _fontColor = (255, 254, 252)
@@ -15,9 +15,10 @@ class NpuzzleVisualizer():
     def __init__(self, puzzleDim, puzzleStates, windowDim=720):
         self._puzzleDim = puzzleDim
         self._windowDim = windowDim
-        self._pieceDim = self._windowDim // puzzleDim - self._gameBoardPad * 2
+        self._pieceDim = self._windowDim // (puzzleDim + 1)
+        self._pieceBorder = self._pieceDim // 30
         self._puzzleStates = puzzleStates
-        self._boardDim = self._pieceDim * self._puzzleDim - self._pieceBorder * self._puzzleDim
+        self._boardDim = self._pieceDim * self._puzzleDim - (self._pieceBorder * (self._puzzleDim - 1))
         self._boardStart = (self._windowDim - self._boardDim) // 2
         self._fontSize = self._pieceDim // 3
         self._numbers = {}
