@@ -23,7 +23,7 @@ if __name__ == "__main__":
         goal = goal.parent
     puzzleStates.reverse()
     if execParameters.v:
-        vs = NpuzzleVisualizer(parserIstance.shape, puzzleStates, 1000)
+        vs = NpuzzleVisualizer(parserIstance.shape, puzzleStates, 400)
         vs.startVisualization()
     else:
         for puzzle in puzzleStates:
