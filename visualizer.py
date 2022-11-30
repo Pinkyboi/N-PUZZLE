@@ -1,8 +1,9 @@
+import sys
 import pygame
+from pygame.locals import *
 import time
 class NpuzzleVisualizer():
 
-    _gameBoardPad = 20
     _pieceBorder = 10
 
     _fontColor = (255, 254, 252)
@@ -11,11 +12,14 @@ class NpuzzleVisualizer():
     _oddPieceColor=(136, 0, 0)
     _pieceBorderColor=(0, 0, 0)
     _zeroPieceColor=(0, 0, 0)
+    _timeBetweenStates = 0.8
+    _puzzleIndex = 0
 
     def __init__(self, puzzleDim, puzzleStates, windowDim=720):
         self._puzzleDim = puzzleDim
         self._windowDim = windowDim
-        self._pieceDim = self._windowDim // puzzleDim - self._gameBoardPad * 2
+        self._pieceDim = self._windowDim // puzzleDim
+        # self._gameBoardPad = 20
         self._puzzleStates = puzzleStates
         self._boardDim = self._pieceDim * self._puzzleDim - self._pieceBorder * self._puzzleDim
         self._boardStart = (self._windowDim - self._boardDim) // 2
@@ -47,45 +51,71 @@ class NpuzzleVisualizer():
                                     rowCoor,
                                     self._pieceDim,
                                     self._pieceDim), self._pieceBorder)
-            self.printPieceNumber(rowCoor, columnCoor, value)       
-            pygame.display.update(piece)
-            pygame.display.update(pieceBorder)
+            self.printPieceNumber(rowCoor, columnCoor, value)
         else:
             zeroPiece = pygame.draw.rect(self._surface, self._zeroPieceColor,
                                     pygame.Rect(columnCoor,
                                     rowCoor,
                                     self._pieceDim,
                                     self._pieceDim))
-            pygame.display.update(zeroPiece)
+
+    def mySleep(self, seconds):
+        start = time.time()
+        while time.time() - start < seconds:
+            if self.eventHandler():
+                break
+            pygame.time.wait(10)
 
     def drawPieces(self, puzzleState):
         row = -1
         for piece in range(self._puzzleDim * self._puzzleDim):
+            self.eventHandler()
             column = piece % self._puzzleDim
             if column == 0:
                 row += 1
             self.drawPiece(row, column, puzzleState[piece])
-
-    def startVisualization(self):
-        quit = False
-        self._surface.fill(self._bgColor)
         pygame.display.flip()
-        i = 0
-        while not quit:
+        self.mySleep(self._timeBetweenStates)
+
+    def pause(self):
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    quit = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    i -= 1
-                if event.key == pygame.K_RIGHT:
-                    i += 1
-            if (i == len(self._puzzleStates)):
-                time.sleep(5)
-                exit()
-            self.drawPieces(self._puzzleStates[i])
-            time.sleep(1)
-            i += 1
+                    sys.exit()
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                        self._puzzleIndex = self._puzzleIndex + 1 if event.key == pygame.K_RIGHT else self._puzzleIndex - 1
+                        self._puzzleIndex = min(max(self._puzzleIndex, 0), len(self._puzzleStates) - 1)
+                        self.drawPieces(self._puzzleStates[self._puzzleIndex])
+                    if event.key == pygame.K_p:
+                        return
+            
+
+    def eventHandler(self):
+        pygame.event.pump()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    self._puzzleIndex = self._puzzleIndex + 1 if event.key == pygame.K_RIGHT else self._puzzleIndex - 1
+                    self._puzzleIndex = min(max(self._puzzleIndex, 0), len(self._puzzleStates) - 1)
+                    self.drawPieces(self._puzzleStates[self._puzzleIndex])
+                    return False
+                if event.key == pygame.K_p:
+                    self.pause()
+                    return True
+
+
+    def startVisualization(self):
+        # quit = False
+        self._surface.fill(self._bgColor)
+        pygame.display.flip()
+        while True:
+            self.eventHandler()
+            self._puzzleIndex = min(max(self._puzzleIndex, 0), len(self._puzzleStates) - 1)
+            self.drawPieces(self._puzzleStates[self._puzzleIndex])
+            self._puzzleIndex += 1
 
 if __name__ == "__main__":
         vs = NpuzzleVisualizer(3)
