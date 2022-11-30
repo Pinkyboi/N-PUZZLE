@@ -13,6 +13,8 @@ class PuzzleSolver():
         self._priorityQueue = PriorityQueue()
         self._priorityQueue.put(self._startState)
         self._closedList = {}
+        self._spaceComplexity = 0
+        self._timeCoplexity = 0
         if not self.isSolvable():
             print("The puzzle is not solvable.")
             exit()
@@ -33,6 +35,7 @@ class PuzzleSolver():
             newPuzzleNode.swap = (axis, 1 if move - index > 0 else -1)
             newPuzzleNode.cost = self._algorithm(newPuzzleNode, self._goalState, self._heuristic)
             newPuzzles.append(newPuzzleNode)
+            self._spaceComplexity += 1
         return newPuzzles
 
     def solve(self):
@@ -51,6 +54,7 @@ class PuzzleSolver():
                     and childrenNodes[index].cost >= self._closedList[childKey].cost:
                         continue
                 self._priorityQueue.put(childrenNodes[index])
+            self._timeCoplexity += 1
 
     def isSolvable(self):
         totalPermutation = 0
@@ -74,7 +78,7 @@ class PuzzleSolver():
         return PuzzleSolver.calculateHeuristic(currentState, goalState, heuristic)
 
     @staticmethod
-    def dijkstraSearch(currentState, goalState, heuristic):
+    def uniformSearch(currentState, goalState, heuristic):
         return currentState.depth
 
     @staticmethod
@@ -100,3 +104,11 @@ class PuzzleSolver():
     @staticmethod
     def misplacedTile(startState, goalState, block):
         return 1 if startState.puzzle.index(block) != goalState.puzzle.index(block) else 0
+
+    @property
+    def spaceComplexity(self):
+        return self._spaceComplexity
+
+    @property
+    def timeComplexity(self):
+        return self._timeCoplexity
