@@ -23,5 +23,5 @@ if __name__ == "__main__":
         puzzleStates.append(goal.puzzle)
         goal = goal.parent
     puzzleStates.append(firstNode.puzzle)
-    vs = NpuzzleVisualizer(parserIstance.shape, puzzleStates[::-1], puzzleStart=firstNode.puzzle, windowDim=720)
+    vs = NpuzzleVisualizer(parserIstance.shape, puzzleStates[::-1], 720)
     vs.startVisualization()
