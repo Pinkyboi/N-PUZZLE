@@ -40,9 +40,10 @@ class PuzzleNode():
     def __lt__(self, other):
         return self.cost < other.cost
 
-    def printNode(self):
-        for block in self.puzzle:
-            print(f"|{block:>3}", end="{}".format('|\n' if (self.puzzle.index(block) + 1) % self.dim == 0 else ''))
+    @staticmethod
+    def printPuzzle(puzzle, dim):
+        for block in puzzle:
+            print(f"|{block:>3}", end="{}".format('|\n' if (puzzle.index(block) + 1) % dim == 0 else ''))
         print()
 
     @property
