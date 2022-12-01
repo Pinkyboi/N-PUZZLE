@@ -9,6 +9,8 @@ def heuristicCheck(heuristic):
         return PuzzleSolver.euclideanDistance
     elif heuristic == 'Misplaced tile':
         return PuzzleSolver.misplacedTile
+    elif heuristic == 'Gaschnig':
+        return PuzzleSolver.gaschnig
     else:
         sys.exit(f"Heuristic: {heuristic} is not a valid heuristic.")
 
@@ -42,7 +44,7 @@ def file_path(path):
 
 def getExectionParameters():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--heuristic", type=heuristicCheck, default='Manhattan distance', help="The heuristic to use for the puzzle solver:-1: Manhattan distance\n-2: Euclidean distance\n-3: Misplaced tile", required=False)
+    parser.add_argument("--heuristic", type=heuristicCheck, default='Manhattan distance', help="The heuristic to use for the puzzle solver:-1: Manhattan distance\n-2: Euclidean distance\n-3: Misplaced tile\n-4: Gaschnig", required=False)
     parser.add_argument('--algorithm', type=seachAlgorithmCheck, default='A*', help="The search algorithm to use for the puzzle solver:-1: A*\n-2: Uniform\n-3: Greedy", required=False)
     parser.add_argument('--goal', type=goalGeneratorCheck, default='x_spiral', help="The search algorithm to use for the puzzle solver:-1: vertical\n-2: horizontal\n-3: x_spiral\n-4: y_spiral", required=False)
     parser.add_argument("-v", action="store_true", default=False , help="Visualize the solution", required=False)

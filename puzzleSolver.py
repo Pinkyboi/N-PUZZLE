@@ -83,6 +83,8 @@ class PuzzleSolver():
 
     @staticmethod
     def calculateHeuristic(currentState, goalState, heuristic):
+        if heuristic == PuzzleSolver.gaschnig:
+            return heuristic(currentState, goalState)
         return sum(heuristic(currentState, goalState, block) for block in currentState.puzzle)
 
     @staticmethod
@@ -101,9 +103,30 @@ class PuzzleSolver():
         pLen = startState.dim
         return abs(iIndex // pLen - gIndex // pLen) + abs(iIndex % pLen - gIndex % pLen)
 
+
     @staticmethod
     def misplacedTile(startState, goalState, block):
         return 1 if startState.puzzle.index(block) != goalState.puzzle.index(block) else 0
+
+    @staticmethod
+    def gaschnig(startState, goalState):
+        score = 0
+        gaschnigPuzzle = startState.puzzle.copy()
+        while gaschnigPuzzle != goalState.puzzle:
+            sZeroIndex = gaschnigPuzzle.index(0)
+            gZeroIndex = goalState.puzzle.index(0)
+            if sZeroIndex != gZeroIndex:
+                swapIndex = gaschnigPuzzle.index(goalState.puzzle[sZeroIndex])
+                gaschnigPuzzle[sZeroIndex], gaschnigPuzzle[swapIndex] = gaschnigPuzzle[swapIndex], 0
+            else:
+                swapIndex = 0
+                for i in range(len(gaschnigPuzzle)):
+                    if gaschnigPuzzle[i] != goalState.puzzle[i]:
+                        swapIndex = i
+                        break
+                gaschnigPuzzle[sZeroIndex], gaschnigPuzzle[swapIndex] = gaschnigPuzzle[swapIndex], 0
+            score += 1
+        return score
 
     @property
     def spaceComplexity(self):
