@@ -6,7 +6,6 @@ import time
 class NpuzzleVisualizer():
 
     _pieceBorder = 10
-
     _fontColor = (255, 254, 252)
     _bgColor=(49, 49, 49)
     _evenPieceColor=(93, 93, 93)
@@ -15,8 +14,10 @@ class NpuzzleVisualizer():
     _zeroPieceColor=(0, 0, 0)
     _timeBetweenStates = 0.8
     _puzzleIndex = 0
+    _fontStyle = "Roboto-Black.ttf"
 
     def __init__(self, puzzleDim, puzzleStates, windowDim=720):
+        pygame.init()
         self._puzzleDim = puzzleDim
         self._windowDim = windowDim
         self._pieceDim = self._windowDim // (puzzleDim + 1)
@@ -26,14 +27,16 @@ class NpuzzleVisualizer():
         self._boardStart = (self._windowDim - self._boardDim) // 2
         self._fontSize = self._pieceDim // 2
         self._numbers = {}
-        pygame.init()
         self._surface = pygame.display.set_mode((self._windowDim, self._windowDim))
+
+    def create_font(self, text, font, size, color=(255,255,255), bold=False, italic=False):
+        font = pygame.font.SysFont(font, size, bold=bold, italic=italic)
+        text = font.render(text, True, color)
+        return text
 
     def printPieceNumber(self, row, column, value):
         if value not in self._numbers.keys():
-            numberFont  = pygame.font.Font("Roboto-Black.ttf", self._fontSize)
-            numberImage = numberFont.render(str(value), True, self._fontColor)
-            self._numbers[value] = numberImage
+            self._numbers[value] = self.create_font(str(value), self._fontStyle, self._fontSize, self._fontColor)
         textRect = self._numbers[value].get_rect(center=(column + (self._pieceDim // 2), row + (self._pieceDim//2)))
         self._surface.blit(self._numbers[value], textRect)
 
@@ -42,19 +45,19 @@ class NpuzzleVisualizer():
         rowCoor = self._boardStart + self._pieceDim * row - (self._pieceBorder if row else 0) * row
         if value:
             pieceColor = self._oddPieceColor if value % 2 else self._evenPieceColor
-            piece = pygame.draw.rect(self._surface, pieceColor,
+            pygame.draw.rect(self._surface, pieceColor,
                                     pygame.Rect(columnCoor,
                                     rowCoor,
                                     self._pieceDim,
                                     self._pieceDim))
-            pieceBorder = pygame.draw.rect(self._surface, self._pieceBorderColor,
+            pygame.draw.rect(self._surface, self._pieceBorderColor,
                                     pygame.Rect(columnCoor,
                                     rowCoor,
                                     self._pieceDim,
                                     self._pieceDim), self._pieceBorder)
             self.printPieceNumber(rowCoor, columnCoor, value)
         else:
-            zeroPiece = pygame.draw.rect(self._surface, self._zeroPieceColor,
+            pygame.draw.rect(self._surface, self._zeroPieceColor,
                                     pygame.Rect(columnCoor,
                                     rowCoor,
                                     self._pieceDim,
@@ -90,10 +93,8 @@ class NpuzzleVisualizer():
                         self.drawPieces(self._puzzleStates[self._puzzleIndex])
                     if event.key == pygame.K_p:
                         return
-            
 
     def eventHandler(self):
-        pygame.event.pump()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -106,10 +107,9 @@ class NpuzzleVisualizer():
                 if event.key == pygame.K_p:
                     self.pause()
                     return True
-
+        return False
 
     def startVisualization(self):
-        # quit = False
         self._surface.fill(self._bgColor)
         pygame.display.flip()
         while True:
