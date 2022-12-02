@@ -11,6 +11,8 @@ def heuristicCheck(heuristic):
         return PuzzleSolver.misplacedTile
     elif heuristic == 'Gaschnig':
         return PuzzleSolver.gaschnig
+    elif heuristic == 'Linear conflict':
+        return PuzzleSolver.linearConflict
     else:
         sys.exit(f"Heuristic: {heuristic} is not a valid heuristic.")
 

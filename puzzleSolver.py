@@ -58,7 +58,8 @@ class PuzzleSolver():
 
     def isSolvable(self):
         totalPermutation = 0
-        initialPermutation = PuzzleSolver.manhatanDistance(self._startState, self._goalState, 0)
+        gZeroIndex, sZeroIndex = self._goalState.puzzle.index(0), self._startState.puzzle.index(0)
+        initialPermutation = PuzzleSolver.calculateManhatan(sZeroIndex, gZeroIndex, self._startState.dim)
         testPuzzle = self._startState.puzzle.copy()
         while testPuzzle != self._goalState.puzzle:
             for sBlock, gBlock  in zip(testPuzzle, self._goalState.puzzle):
@@ -71,42 +72,50 @@ class PuzzleSolver():
 
     @staticmethod
     def aStarSearch(currentState, goalState, heuristic):
-        return PuzzleSolver.calculateHeuristic(currentState, goalState, heuristic) + currentState.depth
+        return heuristic(currentState, goalState) + currentState.depth
 
     @staticmethod
     def greedySearch(currentState, goalState, heuristic):
-        return PuzzleSolver.calculateHeuristic(currentState, goalState, heuristic)
+        return heuristic(currentState, goalState)
 
     @staticmethod
     def uniformSearch(currentState, goalState, heuristic):
         return currentState.depth
 
     @staticmethod
-    def calculateHeuristic(currentState, goalState, heuristic):
-        if heuristic == PuzzleSolver.gaschnig:
-            return heuristic(currentState, goalState)
-        return sum(heuristic(currentState, goalState, block) for block in currentState.puzzle)
+    def euclideanDistance(startState, goalState):  
+        pDim = startState.dim
+        for sIndex in range(len(startState.puzzle)):
+            if startState[sIndex] != goalState[sIndex]:
+                gIndex = goalState.puzzle.index(startState.puzzle[sIndex])
+                xDistance = abs(sIndex // pDim - gIndex // pDim)
+                yDistance = abs(sIndex % pDim - gIndex % pDim)
+                score += sqrt(xDistance ** 2 + yDistance ** 2)
+        return score
 
     @staticmethod
-    def euclideanDistance(startState, goalState, block):
-        iIndex = startState.puzzle.index(block)    
-        gIndex = goalState .puzzle.index(block)
-        pLen = startState.dim
-        xDistance = abs(iIndex // pLen - gIndex // pLen)
-        yDistance = abs(iIndex % pLen - gIndex % pLen)
-        return sqrt(xDistance ** 2 + yDistance ** 2)
+    def calculateManhatan(startIndex, goalIndex, dim):
+        xDistance = abs(startIndex // dim - goalIndex // dim)
+        yDistance = abs(startIndex % dim - goalIndex % dim)
+        return xDistance + yDistance
 
     @staticmethod
-    def manhatanDistance(startState, goalState , block):
-        iIndex = startState.puzzle.index(block)    
-        gIndex = goalState .puzzle.index(block)
-        pLen = startState.dim
-        return abs(iIndex // pLen - gIndex // pLen) + abs(iIndex % pLen - gIndex % pLen)
-
+    def manhatanDistance(startState, goalState):  
+        pDim = startState.dim
+        score = 0
+        for sIndex in range(len(startState.puzzle)):
+            if startState.puzzle[sIndex] != goalState.puzzle[sIndex]:
+                gIndex = goalState.puzzle.index(startState.puzzle[sIndex])
+                score += PuzzleSolver.calculateManhatan(sIndex, gIndex, pDim)
+        return score
 
     @staticmethod
-    def misplacedTile(startState, goalState, block):
-        return 1 if startState.puzzle.index(block) != goalState.puzzle.index(block) else 0
+    def misplacedTile(startState, goalState):
+        score = 0
+        for i in range(len(startState.puzzle)):
+            if startState.puzzle[i] != goalState.puzzle[i]:
+                score += 1
+        return score
 
     @staticmethod
     def gaschnig(startState, goalState):
@@ -127,6 +136,23 @@ class PuzzleSolver():
                 gaschnigPuzzle[sZeroIndex], gaschnigPuzzle[swapIndex] = gaschnigPuzzle[swapIndex], 0
             score += 1
         return score
+
+    @staticmethod
+    def linearConflict(startState, goalState):
+        score = 0
+        for i in range(startState.dim):
+            currentRow = startState.puzzle[i * startState.dim: i * startState.dim + startState.dim]
+            goalRow = goalState.puzzle[i * startState.dim: i * startState.dim + startState.dim]
+            currentColumn = startState.puzzle[i::startState.dim]
+            goalColumn = goalState.puzzle[i::startState.dim]
+            for j in range(startState.dim):
+                if currentRow[j] in goalRow or currentColumn[j] in goalColumn:
+                    for k in range(j, startState.dim):
+                        if currentRow[k] in goalRow and goalRow[k] in currentRow[:j]:
+                            score += 2
+                        if currentColumn[k] in goalColumn and goalColumn[k] in currentColumn[:j]:
+                            score += 2
+        return score + PuzzleSolver.manhatanDistance(startState, goalState)
 
     @property
     def spaceComplexity(self):
