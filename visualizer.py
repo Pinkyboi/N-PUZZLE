@@ -22,7 +22,7 @@ class NpuzzleVisualizer():
         self._puzzleDim = puzzleDim
         self._windowDim = windowDim
         self._pieceDim = self._windowDim // (puzzleDim + 1)
-        self._pieceBorder = self._pieceDim // 30
+        self._pieceBorder = self._pieceDim // 10
         self._puzzleStates = puzzleStates
         self._boardDim = self._pieceDim * self._puzzleDim - (self._pieceBorder * (self._puzzleDim - 1))
         self._boardStart = (self._windowDim - self._boardDim) // 2
