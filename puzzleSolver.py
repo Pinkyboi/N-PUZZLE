@@ -56,6 +56,37 @@ class PuzzleSolver():
                 self._priorityQueue.put(childrenNodes[index])
             self._timeCoplexity += 1
 
+    def solve(self):
+        m = self._algorithm(self._startState, self._goalState, self._heuristic)        
+        while True:
+            bound = m
+            m = -1
+            self._priorityQueue.put(self._startState)
+            self._closedList = {}
+            while not self._priorityQueue.empty():
+                self._timeCoplexity += 1
+                current_item = self._priorityQueue.get()
+                if current_item.puzzle == self._goalState.puzzle:
+                    return current_item
+                if current_item.hash in self._closedList.keys()\
+                    and current_item.cost >= self._closedList[current_item.hash].cost:
+                    continue
+                if current_item.cost > bound:
+                    if current_item.cost < m or m == -1:
+                        m = current_item.cost
+                    continue
+                self._closedList[current_item.hash] = current_item
+                childrenNodes = self.createChildrenNodes(current_item)
+                for index in range(len(childrenNodes)):
+                    childKey = childrenNodes[index].hash
+                    if m == -1:
+                        m = childrenNodes[index].cost
+                    if childKey in self._closedList.keys()\
+                        and childrenNodes[index].cost >= self._closedList[childKey].cost:
+                            continue
+                    self._priorityQueue.put(childrenNodes[index])
+
+
     def isSolvable(self):
         totalPermutation = 0
         gZeroIndex, sZeroIndex = self._goalState.puzzle.index(0), self._startState.puzzle.index(0)
