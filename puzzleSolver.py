@@ -38,8 +38,9 @@ class PuzzleSolver():
             self._spaceComplexity += 1
         return newPuzzles
 
-    def solve(self):
+    def normalSearch(self):
         while not self._priorityQueue.empty():
+            self._timeCoplexity += 1
             current_item = self._priorityQueue.get()
             if current_item.puzzle == self._goalState.puzzle:
                 return current_item
@@ -54,13 +55,12 @@ class PuzzleSolver():
                     and childrenNodes[index].cost >= self._closedList[childKey].cost:
                         continue
                 self._priorityQueue.put(childrenNodes[index])
-            self._timeCoplexity += 1
 
-    def solve(self):
-        m = self._algorithm(self._startState, self._goalState, self._heuristic)        
+    def idaStarSearch(self):
+        minimumDepth = self._heuristic(self._startState, self._goalState)        
         while True:
-            bound = m
-            m = -1
+            bound = minimumDepth
+            minimumDepth = -1
             self._priorityQueue.put(self._startState)
             self._closedList = {}
             while not self._priorityQueue.empty():
@@ -72,20 +72,22 @@ class PuzzleSolver():
                     and current_item.cost >= self._closedList[current_item.hash].cost:
                     continue
                 if current_item.cost > bound:
-                    if current_item.cost < m or m == -1:
-                        m = current_item.cost
+                    if current_item.cost < minimumDepth or minimumDepth == -1:
+                        minimumDepth = current_item.cost
                     continue
                 self._closedList[current_item.hash] = current_item
                 childrenNodes = self.createChildrenNodes(current_item)
                 for index in range(len(childrenNodes)):
                     childKey = childrenNodes[index].hash
-                    if m == -1:
-                        m = childrenNodes[index].cost
                     if childKey in self._closedList.keys()\
                         and childrenNodes[index].cost >= self._closedList[childKey].cost:
                             continue
                     self._priorityQueue.put(childrenNodes[index])
 
+    def solve(self):
+        if self._algorithm == PuzzleSolver.idaStarSearchCost:
+            return self.idaStarSearch()
+        return self.normalSearch()
 
     def isSolvable(self):
         totalPermutation = 0
@@ -102,15 +104,19 @@ class PuzzleSolver():
         return initialPermutation % 2 == totalPermutation % 2
 
     @staticmethod
-    def aStarSearch(currentState, goalState, heuristic):
+    def aStarSearchCost(currentState, goalState, heuristic):
+        return heuristic(currentState, goalState) + currentState.depth
+    
+    @staticmethod
+    def idaStarSearchCost(currentState, goalState, heuristic):
         return heuristic(currentState, goalState) + currentState.depth
 
     @staticmethod
-    def greedySearch(currentState, goalState, heuristic):
+    def greedySearchCost(currentState, goalState, heuristic):
         return heuristic(currentState, goalState)
 
     @staticmethod
-    def uniformSearch(currentState, goalState, heuristic):
+    def uniformSearchCost(currentState, goalState, heuristic):
         return currentState.depth
 
     @staticmethod

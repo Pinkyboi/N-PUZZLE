@@ -18,11 +18,13 @@ def heuristicCheck(heuristic):
 
 def seachAlgorithmCheck(algorithm):
     if algorithm == 'A*':
-        return PuzzleSolver.aStarSearch
+        return PuzzleSolver.aStarSearchCost
+    elif algorithm == "IDA*":
+        return PuzzleSolver.idaStarSearchCost
     elif algorithm == 'Uniform':
-        return PuzzleSolver.uniformSearch
+        return PuzzleSolver.uniformSearchCost
     elif algorithm == "Greedy":
-        return PuzzleSolver.greedySearch
+        return PuzzleSolver.greedySearchCost
     else:
         sys.exit(f"Algorithm: {algorithm} is not a valid search algorithm.")
 

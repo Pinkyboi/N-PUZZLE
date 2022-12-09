@@ -1,7 +1,4 @@
 
-
-#this is a class representing one node of n puzzle
-
 class PuzzleNode():
     
     def __init__(self, puzzle, dim, parent=None):
