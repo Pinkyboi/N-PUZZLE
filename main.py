@@ -1,7 +1,7 @@
 from puzzle import PuzzleNode
 from puzzleSolver import PuzzleSolver
 from visualizer import NpuzzleVisualizer
-from parser import Parser
+from puzzleParser import Parser
 from argumentHandler import getExectionParameters
 import time
 

@@ -25,7 +25,7 @@ class Parser():
             print(line, end="")
 
     def removeComments(self):
-        commentPatten = re.compile("(#.+)|[\n]")
+        commentPatten = re.compile("(#.*)|[\s]*[\n]")
         newLines = []
         for line in self._lines:
             newLine = re.sub(commentPatten, '', line)
