@@ -75,11 +75,3 @@ class Parser():
             sys.exit("Error: Wrong format.")
         self.getShape(newLines)
         self.flattenPuzzle(newLines[1:])
-
-        
-if __name__ == "__main__":
-    p = Parser("puzzle.txt")
-    p.loadData()
-    # p.printRawPuzzle()
-    p.cleanPuzzle()
-    print(p.flattenedPuzzle)
