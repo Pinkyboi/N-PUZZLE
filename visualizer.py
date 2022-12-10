@@ -15,7 +15,7 @@ class NpuzzleVisualizer():
     _zeroPieceColor=(0, 0, 0)
     _timeBetweenStates = 0.8
     _puzzleIndex = 0
-    _fontStyle = "Roboto-Black.ttf"
+    _fontStyle = "resources/Roboto-Black.ttf"
 
     def __init__(self, puzzleDim, puzzleStates, windowDim=720):
         pygame.init()
@@ -119,6 +119,3 @@ class NpuzzleVisualizer():
             self.drawPieces(self._puzzleStates[self._puzzleIndex])
             self._puzzleIndex += 1
 
-if __name__ == "__main__":
-        vs = NpuzzleVisualizer(3)
-        vs.startVisualization()
