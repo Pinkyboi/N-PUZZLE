@@ -1,7 +1,7 @@
-def verticalGoalState(dim):
+def horizontalGoalState(dim):
     return [(x + 1) % (dim * dim) for x in range(dim * dim)]
 
-def horizontalGoalState(dim):
+def verticalGoalState(dim):
     return [((dim * (i % dim) + (i // dim) + 1) % (dim * dim)) for i in range(dim * dim)]
 
 def spiralGoalState(dim, moveAxis='x'):
